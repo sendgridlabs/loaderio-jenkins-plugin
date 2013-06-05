@@ -1,0 +1,6 @@
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  This plugin allows to stress-test your web-apps/apis with thousands of concurrent connections via <a href="http://loader.io">loader.io</a> API.
+</div>
