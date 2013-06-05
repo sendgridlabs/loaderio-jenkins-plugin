@@ -10,3 +10,9 @@ Load by maven:
     mvn hpi:run
 
 If you open http://localhost:8080/ in your browser, you should see the Jenkins page running in Jetty. The MAVEN_OPTS portion launches this whole thing with the debugger port 8000, so you should be able to start a debug session to this port from your IDE.
+
+For cleanup:
+
+    mvn clean install
+
+Done.
