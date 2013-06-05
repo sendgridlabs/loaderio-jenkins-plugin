@@ -1,0 +1,14 @@
+<projectDescription>
+  <name>loaderio-jenkins-plugin</name>
+  <comment>This plugin allows to stress-test your web-apps/apis with thousands of concurrent connections via &lt;a href=&quot;http://loader.io&quot;&gt;loader.io&lt;/a&gt; API. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+    <nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
+  </natures>
+</projectDescription>
