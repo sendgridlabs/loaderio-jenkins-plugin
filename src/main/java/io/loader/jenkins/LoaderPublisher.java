@@ -1,13 +1,20 @@
 package io.loader.jenkins;
 
+import com.cloudbees.plugins.credentials.CredentialsProvider;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Item;
+import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
@@ -22,7 +29,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * <p>
  * When the user configures the project and enables this builder,
  * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link LoaderioPublisher} is created. The created
+ * and a new {@link LoaderPublisher} is created. The created
  * instance is persisted to the project configuration XML by using
  * XStream, so this allows you to use instance fields (like {@link #name})
  * to remember the configuration.
@@ -33,12 +40,12 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author Kohsuke Kawaguchi
  */
-public class LoaderioPublisher extends Notifier {
+public class LoaderPublisher extends Notifier {
 	
 	private String apiKey;
 	
 	@DataBoundConstructor
-    public LoaderioPublisher(String apiKey) {
+    public LoaderPublisher(String apiKey) {
         this.apiKey = apiKey;
     }
 	
@@ -72,8 +79,24 @@ public class LoaderioPublisher extends Notifier {
 		private String apiKey;
 
         public LoaderioPerformancePublisherDescriptor() {
-            super(LoaderioPublisher.class);
+            super(LoaderPublisher.class);
             load();
+        }
+        
+        public List<LoaderCredential> getCredentials(Object scope) {
+            List<LoaderCredential> result = new ArrayList<LoaderCredential>();
+            Set<String> apiKeys = new HashSet<String>();
+
+            Item item = scope instanceof Item ? (Item) scope : null;
+            for (LoaderCredential c : CredentialsProvider
+                    .lookupCredentials(LoaderCredential.class, item, ACL.SYSTEM)) {
+                String id = c.getId();
+                if (!apiKeys.contains(id)) {
+                    result.add(c);
+                    apiKeys.add(id);
+                }
+            }
+            return result;
         }
 		
 		@Override
