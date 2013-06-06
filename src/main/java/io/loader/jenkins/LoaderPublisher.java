@@ -8,10 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jenkins.model.Jenkins;
+
+import org.apache.commons.lang.StringUtils;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Job;
 import hudson.model.BuildListener;
 import hudson.model.Item;
 import hudson.security.ACL;
@@ -19,8 +23,10 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
+import hudson.util.ListBoxModel;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
@@ -81,6 +87,29 @@ public class LoaderPublisher extends Notifier {
         public LoaderioPerformancePublisherDescriptor() {
             super(LoaderPublisher.class);
             load();
+        }
+        
+        public ListBoxModel doFillApiKeyItems() {
+            ListBoxModel items = new ListBoxModel();
+            Set<String> apiKeys = new HashSet<String>();
+
+            Item item = Stapler.getCurrentRequest().findAncestorObject(Item.class);
+            if (item instanceof Job) {
+                List<LoaderCredential> global = CredentialsProvider
+                        .lookupCredentials(LoaderCredential.class, Jenkins.getInstance(), ACL.SYSTEM);
+                if (!global.isEmpty() && !StringUtils.isEmpty(getApiKey())) {
+                    items.add("Default API Key", "");
+                }
+            }
+            for (LoaderCredential c : CredentialsProvider
+                    .lookupCredentials(LoaderCredential.class, item, ACL.SYSTEM)) {
+                String id = c.getId();
+                if (!apiKeys.contains(id)) {
+                    items.add(StringUtils.defaultIfEmpty(c.getDescription(), id), id);
+                    apiKeys.add(id);
+                }
+            }
+            return items;
         }
         
         public List<LoaderCredential> getCredentials(Object scope) {
