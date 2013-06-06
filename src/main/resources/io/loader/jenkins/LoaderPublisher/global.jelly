@@ -10,6 +10,7 @@
     <f:section title="Loader.io Perfomance Testing">
       <f:entry title="${%Select default API Key}" field="apiKey">
         <f:select style="width:32em;"/>
+        <div>You can add more API keys on <a href="./credentials">this page</a></div>
       </f:entry>
     </f:section>
   </j:if>

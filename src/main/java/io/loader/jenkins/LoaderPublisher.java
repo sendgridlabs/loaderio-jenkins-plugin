@@ -146,8 +146,22 @@ public class LoaderPublisher extends Notifier {
         }
 		
 		public String getApiKey() {
-			return apiKey;
-		}
+            List<LoaderCredential> credentials = CredentialsProvider
+                    .lookupCredentials(LoaderCredential.class, Jenkins.getInstance(), ACL.SYSTEM);
+            if (StringUtils.isBlank(apiKey) && !credentials.isEmpty()) {
+                return credentials.get(0).getId();
+            }
+            if (credentials.size() == 1) {
+                return credentials.get(0).getId();
+            }
+            for (LoaderCredential c: credentials) {
+                if (StringUtils.equals(c.getId(), apiKey)) {
+                    return apiKey;
+                }
+            }
+            // API key is not valid any more
+            return "";
+        }
 		
 		public void setApiKey(String apiKey) {
 			this.apiKey = apiKey;
