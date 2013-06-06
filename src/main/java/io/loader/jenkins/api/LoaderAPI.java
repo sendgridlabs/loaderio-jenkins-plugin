@@ -13,8 +13,10 @@ public class LoaderAPI {
 	
 	PrintStream logger = new PrintStream(System.out);
 	DefaultHttpClient httpClient;
+	String apiKey;
 
-	public LoaderAPI() {
+	public LoaderAPI(String apiKey) {
+		this.apiKey = apiKey;
         try {
             httpClient = new DefaultHttpClient();
         } catch (Exception ex) {
@@ -22,7 +24,7 @@ public class LoaderAPI {
         }
     }
 	
-	public Boolean getTestApi(String apiKey) throws JSONException, IOException, ServletException {
+	public Boolean getTestApi() throws JSONException, IOException, ServletException {
 		if (apiKey == null || apiKey.trim().isEmpty()) {
             logger.println("getTestApi apiKey is empty");
             return false;

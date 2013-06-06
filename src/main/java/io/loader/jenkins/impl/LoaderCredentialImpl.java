@@ -64,8 +64,8 @@ public class LoaderCredentialImpl extends AbstractLoaderioCredential {
 
         // Used by global.jelly to authenticate User key
         public FormValidation doTestConnection(@QueryParameter("apiKey") final String apiKey) throws MessagingException, IOException, JSONException, ServletException {
-            LoaderAPI ldr = new LoaderAPI();
-            Boolean testCount = ldr.getTestApi(apiKey);
+            LoaderAPI ldr = new LoaderAPI(apiKey);
+            Boolean testCount = ldr.getTestApi();
             if (!testCount) {
                 return FormValidation.errorWithMarkup("API Key is Invalid");
             } else {
