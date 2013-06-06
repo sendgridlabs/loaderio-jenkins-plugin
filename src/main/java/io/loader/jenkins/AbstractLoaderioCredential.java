@@ -24,6 +24,6 @@ public abstract  class AbstractLoaderioCredential extends BaseCredentials implem
 
     public String getId() {
         final String apiKey = getApiKey().getPlainText();
-        return StringUtils.left(apiKey,4) + "..." + StringUtils.right(apiKey, 4);
+        return StringUtils.left(apiKey,4) + "..." + StringUtils.right(apiKey, 6);
     }
 }

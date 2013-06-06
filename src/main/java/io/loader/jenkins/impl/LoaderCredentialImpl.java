@@ -8,6 +8,7 @@ import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.Secret;
 import io.loader.jenkins.AbstractLoaderioCredential;
+import io.loader.jenkins.api.LoaderAPI;
 import net.sf.json.JSONException;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -62,14 +63,13 @@ public class LoaderCredentialImpl extends AbstractLoaderioCredential {
 
 
         // Used by global.jelly to authenticate User key
-        public FormValidation doTestConnection(@QueryParameter("apiKey") final String userKey) throws MessagingException, IOException, JSONException, ServletException {
-            //BlazemeterApi bzm = new BlazemeterApi();
-            //int testCount = bzm.getTestCount(userKey);
-        	int testCount = 0;
-            if (testCount <= 0) {
-                return FormValidation.errorWithMarkup("User Key Invalid Or No Available Tests");
+        public FormValidation doTestConnection(@QueryParameter("apiKey") final String apiKey) throws MessagingException, IOException, JSONException, ServletException {
+            LoaderAPI ldr = new LoaderAPI();
+            Boolean testCount = ldr.getTestApi(apiKey);
+            if (!testCount) {
+                return FormValidation.errorWithMarkup("API Key is Invalid");
             } else {
-                return FormValidation.ok("User Key Valid. " + testCount + " Available Tests");
+                return FormValidation.ok("API Key is Valid.");
             }
         }
 
