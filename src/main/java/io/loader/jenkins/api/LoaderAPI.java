@@ -3,6 +3,7 @@ package io.loader.jenkins.api;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 
@@ -26,6 +27,10 @@ public class LoaderAPI {
     public LoaderAPI(String apiKey) {
         logger.println("in #LoaderAPI, apiKey: " + apiKey);
         this.apiKey = apiKey;
+    }
+
+    public HashMap<String, String> getTestList() {
+        return null;
     }
 
     public JSON getTests() {

@@ -2,9 +2,9 @@
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
     <f:entry title="Provided by Loader.io">
-        <a href="http://loader.io" target="_blank">
-            <img src="${rootURL}/plugin/loaderio-jenkins-plugin/logo.png" alt="100%"/>
-        </a>
+      <a href="http://loader.io" target="_blank">
+        <img src="${rootURL}/plugin/loaderio-jenkins-plugin/logo.png" alt="100%"/>
+      </a>
     </f:entry>
     
     <j:set var="keys" value="${descriptor.getCredentials(it)}"/>
@@ -13,6 +13,11 @@
         <f:select style="width:32em;"/>
       </f:entry>
     </j:if>
+    
+    <f:entry title="${%Loader.io Test}:" field="testId">
+      <f:select>
+      </f:select>
+    </f:entry>
 
 
 </j:jelly>

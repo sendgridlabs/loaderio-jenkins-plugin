@@ -2,10 +2,14 @@ package io.loader.jenkins;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 
+import io.loader.jenkins.api.LoaderAPI;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jenkins.model.Jenkins;
@@ -23,9 +27,12 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
+import hudson.util.FormValidation;
+import hudson.util.Secret;
 import hudson.util.ListBoxModel;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -87,6 +94,47 @@ public class LoaderPublisher extends Notifier {
         public LoaderioPerformancePublisherDescriptor() {
             super(LoaderPublisher.class);
             load();
+        }
+        
+     // Used by config.jelly to display the test list.
+        public ListBoxModel doFillTestIdItems(@QueryParameter String apiKey) throws FormValidation {
+            if (StringUtils.isBlank(apiKey)) {
+                apiKey = getApiKey();
+            }
+
+            Secret apiKeyValue = null;
+            Item item = Stapler.getCurrentRequest().findAncestorObject(Item.class);
+            for (LoaderCredential c : CredentialsProvider
+                    .lookupCredentials(LoaderCredential.class, item, ACL.SYSTEM)) {
+                if (StringUtils.equals(apiKey, c.getId())) {
+                	apiKeyValue = c.getApiKey();
+                    break;
+                }
+            }
+            ListBoxModel items = new ListBoxModel();
+            if (apiKeyValue == null) {
+                items.add("No API Key", "-1");
+            } else {
+	            LoaderAPI lda = new LoaderAPI(apiKeyValue.getPlainText());
+	
+	            try {
+	                HashMap<String, String> testList = lda.getTestList();
+	                if (testList == null){
+	                    items.add("Invalid API key ", "-1");
+	                } else if (testList.isEmpty()){
+	                    items.add("No tests", "-1");
+	                } else {
+	                    Set set = testList.entrySet();
+	                    for (Object test : set) {
+	                        Map.Entry me = (Map.Entry) test;
+	                        items.add((String) me.getKey(), String.valueOf(me.getValue()));
+	                    }
+	                }
+	            } catch (Exception e) {
+	                throw FormValidation.error(e.getMessage(), e);
+	            }
+            }
+            return items;
         }
         
         public ListBoxModel doFillApiKeyItems() {
