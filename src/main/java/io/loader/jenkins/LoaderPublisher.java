@@ -115,24 +115,24 @@ public class LoaderPublisher extends Notifier {
             if (apiKeyValue == null) {
                 items.add("No API Key", "-1");
             } else {
-            LoaderAPI lda = new LoaderAPI(apiKeyValue.getPlainText());
-
-            try {
-                HashMap<String, String> testList = lda.getTestList();
-                if (testList == null){
-                    items.add("Invalid API key ", "-1");
-                } else if (testList.isEmpty()){
-                    items.add("No tests", "-1");
-                } else {
-                    Set set = testList.entrySet();
-                    for (Object test : set) {
-                        Map.Entry me = (Map.Entry) test;
-                        items.add((String) me.getKey(), String.valueOf(me.getValue()));
-                    }
-                }
-            } catch (Exception e) {
-                throw FormValidation.error(e.getMessage(), e);
-            }
+	            LoaderAPI lda = new LoaderAPI(apiKeyValue.getPlainText());
+	
+	            try {
+	                HashMap<String, String> testList = lda.getTestList();
+	                if (testList == null){
+	                    items.add("Invalid API key ", "-1");
+	                } else if (testList.isEmpty()){
+	                    items.add("No tests", "-1");
+	                } else {
+	                    Set set = testList.entrySet();
+	                    for (Object test : set) {
+	                        Map.Entry me = (Map.Entry) test;
+	                        items.add((String) me.getKey(), String.valueOf(me.getValue()));
+	                    }
+	                }
+	            } catch (Exception e) {
+	                throw FormValidation.error(e.getMessage(), e);
+	            }
             }
             return items;
         }
