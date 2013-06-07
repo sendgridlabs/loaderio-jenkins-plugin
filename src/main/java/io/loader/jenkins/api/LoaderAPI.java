@@ -2,6 +2,7 @@ package io.loader.jenkins.api;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 
@@ -23,6 +24,10 @@ public class LoaderAPI {
             logger.format("error Instantiating HTTPClient. Exception received: %s", ex);
         }
     }
+	
+	public HashMap<String, String> getTestList() {
+		return null;
+	}
 	
 	public Boolean getTestApi() throws JSONException, IOException, ServletException {
 		if (apiKey == null || apiKey.trim().isEmpty()) {
