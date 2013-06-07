@@ -73,7 +73,7 @@ public class LoaderCredentialImpl extends AbstractLoaderioCredential {
         	return checkLoaderKey(apiKey);
         }
         
-     // Used by global.jelly to authenticate User key
+        // Used by global.jelly to authenticate User key
         public FormValidation doTestExistedConnection(@QueryParameter("apiKey") final Secret apiKey) throws MessagingException, IOException, JSONException, ServletException {
             return checkLoaderKey(apiKey.getPlainText());
         }
