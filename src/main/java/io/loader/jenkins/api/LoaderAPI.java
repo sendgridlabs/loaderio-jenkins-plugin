@@ -46,9 +46,13 @@ public class LoaderAPI {
     public JSONArray getTests() {
         logger.println("in #getTests");
         String result = doRequest(new HttpGet(), "tests");
-        JSONArray list = (JSONArray) JSONSerializer.toJSON(result);
+        JSON list = JSONSerializer.toJSON(result);
         logger.println("Result :::\n" + list.toString());
-        return list;
+        if (list.isArray()) {
+            return (JSONArray) list;
+        } else {
+            return null;
+        }
     }
 
     public Boolean getTestApi() {
