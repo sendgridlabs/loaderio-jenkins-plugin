@@ -5,6 +5,7 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import io.loader.jenkins.api.LoaderAPI;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Job;
 import hudson.model.BuildListener;
 import hudson.model.Item;
+import hudson.model.Result;
 import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -65,6 +67,8 @@ public class LoaderPublisher extends Notifier {
     private int responseTimeFailedThreshold = 0;
 
     private int responseTimeUnstableThreshold = 0;
+    
+    private PrintStream logger;
 	
 	@DataBoundConstructor
     public LoaderPublisher(String apiKey,
@@ -84,7 +88,69 @@ public class LoaderPublisher extends Notifier {
 	@Override
     public boolean perform(AbstractBuild build, Launcher launcher,
             BuildListener listener) throws InterruptedException, IOException {
+		logger = listener.getLogger();
+        Result result; // Result.SUCCESS;
+        String session;
+        if ((result = validateParameters(logger)) != Result.SUCCESS) {
+            return true;
+        }
+        String apiKeyId = StringUtils.defaultIfEmpty(getApiKey(), getDescriptor().getApiKey());
+        String apiKey = null;
+        for (LoaderCredential c : CredentialsProvider
+                .lookupCredentials(LoaderCredential.class, build.getProject(), ACL.SYSTEM)) {
+            if (StringUtils.equals(apiKeyId, c.getId())) {
+                apiKey = c.getApiKey().getPlainText();
+                break;
+            }
+        }
+        logger.println("Test ended with on error percentage threshold");
 		return true;
+	}
+	
+	private void logInfo(String str) {
+		if (logger != null) {
+			logger.println("Loader.io: " + str);
+		}
+	}
+	
+	private Result validateParameters(PrintStream logger) {
+        Result result = Result.SUCCESS;
+        if (errorUnstableThreshold >= 0 && errorUnstableThreshold <= 100) {
+        	logInfo("Errors percentage greater or equal than "
+                    + errorUnstableThreshold + "% will be considered as "
+                    + Result.UNSTABLE.toString().toLowerCase());
+        } else {
+        	logInfo("percentage should be between 0 to 100");
+            result = Result.NOT_BUILT;
+        }
+
+        if (errorFailedThreshold >= 0 && errorFailedThreshold <= 100) {
+        	logInfo("Errors percentage greater or equal than "
+                    + errorFailedThreshold + "% will be considered as "
+                    + Result.FAILURE.toString().toLowerCase());
+        } else {
+        	logInfo("percentage should be between 0 to 100");
+            result = Result.NOT_BUILT;
+        }
+
+        if (responseTimeUnstableThreshold >= 0) {
+        	logInfo("Response time greater or equal than "
+                    + responseTimeUnstableThreshold + "millis will be considered as "
+                    + Result.UNSTABLE.toString().toLowerCase());
+        } else {
+            logger.println("percentage should be greater or equal than 0");
+            result = Result.NOT_BUILT;
+        }
+
+        if (responseTimeFailedThreshold >= 0) {
+        	logInfo("Response time greater or equal than "
+                    + responseTimeFailedThreshold + "millis will be considered as "
+                    + Result.FAILURE.toString().toLowerCase());
+        } else {
+        	logInfo("percentage should be greater or equal than 0");
+            result = Result.NOT_BUILT;
+        }
+        return result;
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {
