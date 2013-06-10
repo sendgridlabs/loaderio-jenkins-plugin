@@ -6,7 +6,6 @@ import io.loader.jenkins.api.LoaderAPI;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -118,16 +117,14 @@ public class LoaderPublisher extends Notifier {
 	            LoaderAPI lda = new LoaderAPI(apiKeyValue.getPlainText());
 	
 	            try {
-	                HashMap<String, String> testList = lda.getTestList();
+	                Map<String, String> testList = lda.getTestList();
 	                if (testList == null){
 	                    items.add("Invalid API key ", "-1");
 	                } else if (testList.isEmpty()){
 	                    items.add("No tests", "-1");
 	                } else {
-	                    Set set = testList.entrySet();
-	                    for (Object test : set) {
-	                        Map.Entry me = (Map.Entry) test;
-	                        items.add((String) me.getKey(), String.valueOf(me.getValue()));
+	                    for (Map.Entry<String, String> test : testList.entrySet()) {
+	                        items.add(test.getValue(), test.getKey());
 	                    }
 	                }
 	            } catch (Exception e) {

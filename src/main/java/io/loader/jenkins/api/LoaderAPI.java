@@ -3,6 +3,7 @@ package io.loader.jenkins.api;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
+import java.util.Map;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -29,14 +30,23 @@ public class LoaderAPI {
         this.apiKey = apiKey;
     }
 
-    public HashMap<String, String> getTestList() {
-        return null;
+    public Map<String, String> getTestList() {
+        JSONArray list = getTests();
+        if (list == null) {
+            return null;
+        }
+        Map<String, String> tests = new HashMap<String, String>();
+        for (Object test : list) {
+            JSONObject t = (JSONObject) test;
+            tests.put(t.getString("test_id"), t.getString("name"));
+        }
+        return tests;
     }
 
-    public JSON getTests() {
+    public JSONArray getTests() {
         logger.println("in #getTests");
         String result = doRequest(new HttpGet(), "tests");
-        JSON list = JSONSerializer.toJSON(result);
+        JSONArray list = (JSONArray) JSONSerializer.toJSON(result);
         logger.println("Result :::\n" + list.toString());
         return list;
     }
