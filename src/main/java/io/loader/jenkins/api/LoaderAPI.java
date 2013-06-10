@@ -20,7 +20,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.util.EntityUtils;
 
 public class LoaderAPI {
-    static final String baseApiUri = "http://api.loader.io/v2/";
+    static final String baseApiUri = "http://api.staging.loader.io/v2/";
 
     PrintStream logger = new PrintStream(System.out);
     String apiKey;
@@ -63,6 +63,7 @@ public class LoaderAPI {
         JSON tests = getTests();
         if (null == tests) {
             logger.println("invalid ApiKey");
+            return false;
         }
         return true;
     }
