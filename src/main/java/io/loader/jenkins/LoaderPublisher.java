@@ -103,7 +103,10 @@ public class LoaderPublisher extends Notifier {
                 break;
             }
         }
-        logger.println("Test ended with on error percentage threshold");
+        
+        LoaderBuildAction action = new LoaderBuildAction(build);
+        build.getActions().add(action);
+        build.setResult(result);
 		return true;
 	}
 	

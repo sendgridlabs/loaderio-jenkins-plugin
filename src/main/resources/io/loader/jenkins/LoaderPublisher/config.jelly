@@ -3,7 +3,7 @@
 
     <f:entry title="Provided by Loader.io">
       <a href="http://loader.io" target="_blank">
-        <img src="${rootURL}/plugin/loaderio-jenkins-plugin/logo.png" alt="100%"/>
+        <img src="${rootURL}/plugin/loaderio-jenkins-plugin/images/logo.png" alt="logo"/>
       </a>
     </f:entry>
     
