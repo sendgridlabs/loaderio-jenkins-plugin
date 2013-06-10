@@ -56,9 +56,29 @@ public class LoaderPublisher extends Notifier {
 	
 	private String apiKey;
 	
+	private String testId = "";
+
+    private int errorFailedThreshold = 0;
+
+    private int errorUnstableThreshold = 0;
+
+    private int responseTimeFailedThreshold = 0;
+
+    private int responseTimeUnstableThreshold = 0;
+	
 	@DataBoundConstructor
-    public LoaderPublisher(String apiKey) {
+    public LoaderPublisher(String apiKey,
+            String testId,
+            int errorFailedThreshold,
+            int errorUnstableThreshold,
+            int responseTimeFailedThreshold,
+            int responseTimeUnstableThreshold) {
         this.apiKey = apiKey;
+        this.errorFailedThreshold = errorFailedThreshold;
+        this.errorUnstableThreshold = errorUnstableThreshold;
+        this.responseTimeFailedThreshold = responseTimeFailedThreshold;
+        this.responseTimeUnstableThreshold = responseTimeUnstableThreshold;
+        this.testId = testId;
     }
 	
 	@Override
@@ -73,6 +93,47 @@ public class LoaderPublisher extends Notifier {
 	
 	public String getApiKey() {
         return apiKey;
+    }
+	
+	public int getResponseTimeFailedThreshold() {
+        return responseTimeFailedThreshold;
+    }
+
+    public void setResponseTimeFailedThreshold(int responseTimeFailedThreshold) {
+        this.responseTimeFailedThreshold = responseTimeFailedThreshold;
+    }
+
+    public int getResponseTimeUnstableThreshold() {
+        return responseTimeUnstableThreshold;
+    }
+
+    public void setResponseTimeUnstableThreshold(int responseTimeUnstableThreshold) {
+        this.responseTimeUnstableThreshold = responseTimeUnstableThreshold;
+    }
+    
+    public int getErrorFailedThreshold() {
+        return errorFailedThreshold;
+    }
+
+    public void setErrorFailedThreshold(int errorFailedThreshold) {
+        this.errorFailedThreshold = Math.max(0, Math.min(errorFailedThreshold, 100));
+    }
+
+    public int getErrorUnstableThreshold() {
+        return errorUnstableThreshold;
+    }
+
+    public void setErrorUnstableThreshold(int errorUnstableThreshold) {
+        this.errorUnstableThreshold = Math.max(0, Math.min(errorUnstableThreshold,
+                100));
+    }
+
+    public String getTestId() {
+        return testId;
+    }
+
+    public void setTestId(String testId) {
+        this.testId = testId;
     }
 	
 	@Override
