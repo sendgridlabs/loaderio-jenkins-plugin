@@ -16,6 +16,7 @@ import net.sf.json.JSON;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.HttpResponse;
@@ -47,12 +48,12 @@ public class LoaderAPI {
     public JSONArray getTests() {
         logger.println("in #getTests");
         Result result = doGetRequest("tests");
+        logger.println("Result :::" + result.code + "\n" + result.body);
         if (result.isFail()) {
             return null;
         }
         //TODO: check on exception
         JSON list = JSONSerializer.toJSON(result.body);
-        logger.println("Result :::\n" + list.toString());
         if (list.isArray()) {
             return (JSONArray) list;
         } else {
@@ -63,8 +64,44 @@ public class LoaderAPI {
     public String getTestStatus(String testId) {
         logger.println("in #getTestStatus");
         Result result = doGetRequest("tests/" + testId);
-        logger.println("Result :::\n" + result.body);
-        return result.body;
+        logger.println("Result :::" + result.code + "\n" + result.body);
+        if (result.isFail()) {
+            return null;
+        }
+        return fetchStatusFromTest(result.body);
+    }
+
+    private String fetchStatusFromTest(String json) {
+        try {
+            JSONObject object = (JSONObject) JSONSerializer.toJSON(json);
+            logger.format("Got status: %s", object.getString("status"));
+            return object.getString("status");
+        } catch (RuntimeException ex) {
+            logger.format("Got exception: %s", ex);
+            return null;
+        }
+    }
+
+    public String runTest(String testId) {
+        logger.println("in #getTests");
+        Result result = doPutRequest("tests/" + testId + "/run");
+        logger.println("Result :::" + result.code + "\n" + result.body);
+        if (result.isFail()) {
+            return null;
+        }
+        //TODO: check on exception
+        JSONObject body = (JSONObject) JSONSerializer.toJSON(result.body);
+        return body.getString("summary_id");
+    }
+
+    public String getTestSummaryData(String testId, String summaryId) {
+        logger.println("in #getTestSummaryData");
+        Result result = doGetRequest("tests/" + testId + "/summaries/" + summaryId);
+        logger.println("Result :::" + result.code + "\n" + result.body);
+        if (result.isFail()) {
+            return null;
+        }
+        return "ok";
     }
 
     public Boolean getTestApi() {
@@ -82,6 +119,10 @@ public class LoaderAPI {
 
     private Result doGetRequest(String path) {
         return doRequest(new HttpGet(), path);
+    }
+
+    private Result doPutRequest(String path) {
+        return doRequest(new HttpPut(), path);
     }
 
     private Result doRequest(HttpRequestBase request, String path) {
