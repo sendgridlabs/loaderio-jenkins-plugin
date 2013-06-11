@@ -5,6 +5,7 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import io.loader.jenkins.api.LoaderAPI;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Job;
 import hudson.model.BuildListener;
 import hudson.model.Item;
+import hudson.model.Result;
 import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -56,15 +58,102 @@ public class LoaderPublisher extends Notifier {
 	
 	private String apiKey;
 	
+	private String testId = "";
+
+    private int errorFailedThreshold = 0;
+
+    private int errorUnstableThreshold = 0;
+
+    private int responseTimeFailedThreshold = 0;
+
+    private int responseTimeUnstableThreshold = 0;
+    
+    private PrintStream logger;
+	
 	@DataBoundConstructor
-    public LoaderPublisher(String apiKey) {
+    public LoaderPublisher(String apiKey,
+            String testId,
+            int errorFailedThreshold,
+            int errorUnstableThreshold,
+            int responseTimeFailedThreshold,
+            int responseTimeUnstableThreshold) {
         this.apiKey = apiKey;
+        this.errorFailedThreshold = errorFailedThreshold;
+        this.errorUnstableThreshold = errorUnstableThreshold;
+        this.responseTimeFailedThreshold = responseTimeFailedThreshold;
+        this.responseTimeUnstableThreshold = responseTimeUnstableThreshold;
+        this.testId = testId;
     }
 	
 	@Override
     public boolean perform(AbstractBuild build, Launcher launcher,
             BuildListener listener) throws InterruptedException, IOException {
+		logger = listener.getLogger();
+        Result result; // Result.SUCCESS;
+        String session;
+        if ((result = validateParameters(logger)) != Result.SUCCESS) {
+            return true;
+        }
+        String apiKeyId = StringUtils.defaultIfEmpty(getApiKey(), getDescriptor().getApiKey());
+        String apiKey = null;
+        for (LoaderCredential c : CredentialsProvider
+                .lookupCredentials(LoaderCredential.class, build.getProject(), ACL.SYSTEM)) {
+            if (StringUtils.equals(apiKeyId, c.getId())) {
+                apiKey = c.getApiKey().getPlainText();
+                break;
+            }
+        }
+        
+        LoaderBuildAction action = new LoaderBuildAction(build);
+        build.getActions().add(action);
+        build.setResult(result);
 		return true;
+	}
+	
+	private void logInfo(String str) {
+		if (logger != null) {
+			logger.println("Loader.io: " + str);
+		}
+	}
+	
+	private Result validateParameters(PrintStream logger) {
+        Result result = Result.SUCCESS;
+        if (errorUnstableThreshold >= 0 && errorUnstableThreshold <= 100) {
+        	logInfo("Errors percentage greater or equal than "
+                    + errorUnstableThreshold + "% will be considered as "
+                    + Result.UNSTABLE.toString().toLowerCase());
+        } else {
+        	logInfo("percentage should be between 0 to 100");
+            result = Result.NOT_BUILT;
+        }
+
+        if (errorFailedThreshold >= 0 && errorFailedThreshold <= 100) {
+        	logInfo("Errors percentage greater or equal than "
+                    + errorFailedThreshold + "% will be considered as "
+                    + Result.FAILURE.toString().toLowerCase());
+        } else {
+        	logInfo("percentage should be between 0 to 100");
+            result = Result.NOT_BUILT;
+        }
+
+        if (responseTimeUnstableThreshold >= 0) {
+        	logInfo("Response time greater or equal than "
+                    + responseTimeUnstableThreshold + "millis will be considered as "
+                    + Result.UNSTABLE.toString().toLowerCase());
+        } else {
+            logger.println("percentage should be greater or equal than 0");
+            result = Result.NOT_BUILT;
+        }
+
+        if (responseTimeFailedThreshold >= 0) {
+        	logInfo("Response time greater or equal than "
+                    + responseTimeFailedThreshold + "millis will be considered as "
+                    + Result.FAILURE.toString().toLowerCase());
+        } else {
+        	logInfo("percentage should be greater or equal than 0");
+            result = Result.NOT_BUILT;
+        }
+        return result;
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {
@@ -73,6 +162,47 @@ public class LoaderPublisher extends Notifier {
 	
 	public String getApiKey() {
         return apiKey;
+    }
+	
+	public int getResponseTimeFailedThreshold() {
+        return responseTimeFailedThreshold;
+    }
+
+    public void setResponseTimeFailedThreshold(int responseTimeFailedThreshold) {
+        this.responseTimeFailedThreshold = responseTimeFailedThreshold;
+    }
+
+    public int getResponseTimeUnstableThreshold() {
+        return responseTimeUnstableThreshold;
+    }
+
+    public void setResponseTimeUnstableThreshold(int responseTimeUnstableThreshold) {
+        this.responseTimeUnstableThreshold = responseTimeUnstableThreshold;
+    }
+    
+    public int getErrorFailedThreshold() {
+        return errorFailedThreshold;
+    }
+
+    public void setErrorFailedThreshold(int errorFailedThreshold) {
+        this.errorFailedThreshold = Math.max(0, Math.min(errorFailedThreshold, 100));
+    }
+
+    public int getErrorUnstableThreshold() {
+        return errorUnstableThreshold;
+    }
+
+    public void setErrorUnstableThreshold(int errorUnstableThreshold) {
+        this.errorUnstableThreshold = Math.max(0, Math.min(errorUnstableThreshold,
+                100));
+    }
+
+    public String getTestId() {
+        return testId;
+    }
+
+    public void setTestId(String testId) {
+        this.testId = testId;
     }
 	
 	@Override

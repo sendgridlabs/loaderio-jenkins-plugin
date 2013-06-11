@@ -3,7 +3,7 @@
 
     <f:entry title="Provided by Loader.io">
       <a href="http://loader.io" target="_blank">
-        <img src="${rootURL}/plugin/loaderio-jenkins-plugin/logo.png" alt="100%"/>
+        <img src="${rootURL}/plugin/loaderio-jenkins-plugin/images/logo.png" alt="logo"/>
       </a>
     </f:entry>
     
@@ -17,6 +17,70 @@
     <f:entry title="${%Loader.io Test}:" field="testId">
       <f:select>
       </f:select>
+    </f:entry>
+    
+     <f:entry title="${%Error percentage threshold}:"
+             description="${%Threshold.Description}">
+      <table width="350px">
+        <thead>
+          <tr>
+            <td/>
+            <td colspan="2">
+              <img src="${rootURL}/images/16x16/yellow.gif" alt="yellow"/>
+              ${%Unstable}
+            </td>
+            <td colspan="2">
+              <img src="${rootURL}/images/16x16/red.gif" alt="red"/>
+              ${%Failed}
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="vertical-align:middle">${%Threshold}:</td>
+            <td>
+              <f:textbox field="errorUnstableThreshold"/>
+            </td>
+            <td>%</td>
+            <td>
+              <f:textbox field="errorFailedThreshold"/>
+            </td>
+            <td>%</td>
+          </tr>
+        </tbody>
+      </table>
+    </f:entry>
+
+    <f:entry title="${%Response Time threshold}:"
+             description="${%Response.Description}">
+    <table width="350px">
+      <thead>
+        <tr>
+        <td/>
+        <td colspan="2">
+          <img src="${rootURL}/images/16x16/yellow.gif" alt="yellow"/>
+          ${%Unstable}
+        </td>
+        <td colspan="2">
+          <img src="${rootURL}/images/16x16/red.gif" alt="red"/>
+          ${%Failed}
+        </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="vertical-align:middle">${%Response Time}:</td>
+          <td>
+            <f:textbox field="responseTimeUnstableThreshold"/>
+          </td>
+          <td>ms</td>
+          <td>
+            <f:textbox field="responseTimeFailedThreshold"/>
+          </td>
+          <td>ms</td>
+        </tr>
+      </tbody>
+    </table>
     </f:entry>
 
 
