@@ -1,9 +1,14 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-<script src="${rootURL}/plugin/loaderio-jenkins-plugin/scripts/play.js" />
+<l:layout css="/plugin/loaderio-jenkins-plugin/css/css.css">
 
-<l:layout css="/plugin/loaderio-jenkins-plugin/css/css.css" >
+    <script type="text/javascript" src="${resURL}/plugin/loaderio-jenkins-plugin/scripts/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript">
+      $.noConflict();
+    </script>
+    <script type="text/javascript" src="${resURL}/plugin/loaderio-jenkins-plugin/scripts/plugin.js"></script>
+    
     <st:include it="${it.owner}" page="sidepanel.jelly" from="${it.owner}" />
     <l:main-panel>
         <h1><a href="http://loader.io" target="_blank">${%Loader.io Test Report}</a></h1>
@@ -14,7 +19,7 @@
         </j:if>
         
         <j:if test="${it.testId != null}">
-          <iframe width="1040" height="500" src="//share.staging.loader.io/results/${it.testId}/widget">
+          <iframe id="mainLoaderIFrame" border="0" width="100%" height="900" src="//share.staging.loader.io/results/${it.testId}/widget/advanced">
               <p>Your browser does not support iframes.</p>
           </iframe>
         </j:if>
