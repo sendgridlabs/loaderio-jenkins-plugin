@@ -54,7 +54,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
  * method will be invoked. 
  *
- * @author Kohsuke Kawaguchi
+ * @author
  */
 public class LoaderPublisher extends Notifier {
 	

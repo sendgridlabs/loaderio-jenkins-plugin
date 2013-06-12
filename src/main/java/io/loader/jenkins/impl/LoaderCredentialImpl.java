@@ -1,24 +1,18 @@
 package io.loader.jenkins.impl;
 
 import com.cloudbees.plugins.credentials.CredentialsDescriptor;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.CredentialsScope;
 
 import hudson.Extension;
-import hudson.model.Item;
-import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.Secret;
 import io.loader.jenkins.AbstractLoaderioCredential;
-import io.loader.jenkins.LoaderCredential;
 import io.loader.jenkins.api.LoaderAPI;
 import net.sf.json.JSONException;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.Stapler;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
