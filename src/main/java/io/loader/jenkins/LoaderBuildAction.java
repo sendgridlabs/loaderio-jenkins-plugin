@@ -20,7 +20,7 @@ public class LoaderBuildAction implements HealthReportingAction {
 	}
 
 	public String getIconFileName() {
-		return "loader_icon.gif";
+		return "/plugin/loaderio-jenkins-plugin/images/24x24/24.png";
 	}
 
 	public String getDisplayName() {

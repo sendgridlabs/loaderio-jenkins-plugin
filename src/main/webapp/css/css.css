@@ -1,0 +1,5 @@
+body #mainLoaderIFrame {
+  border: 0 !important;
+  width: 100%;
+  min-width: 800px;
+}
