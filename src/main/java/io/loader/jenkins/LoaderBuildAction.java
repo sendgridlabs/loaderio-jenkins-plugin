@@ -7,8 +7,13 @@ import hudson.model.AbstractBuild;
 public class LoaderBuildAction implements HealthReportingAction {
 	private final AbstractBuild<?, ?> build;
 	
-	public LoaderBuildAction(AbstractBuild<?, ?> build) {
+	private String testId;
+	private String testResultId = null;
+	
+	public LoaderBuildAction(AbstractBuild<?, ?> build, String testId, String testResultId) {
 		this.build = build;
+		this.testId = testId;
+		this.testResultId = testResultId;
 	}
 	
 	public AbstractBuild<?, ?> getOwner() {
@@ -16,7 +21,11 @@ public class LoaderBuildAction implements HealthReportingAction {
     }
 	
 	public String getTestId() {
-		return "669c8560ba8b94eb68fd8f5c19c354ce";
+		return this.testId;
+	}
+	
+	public String getTestResultId() {
+		return this.testResultId;
 	}
 
 	public String getIconFileName() {

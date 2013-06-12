@@ -1,5 +1,5 @@
 (function($) {
   $(function() {
-    console.log("asdasd");
+    //console.log("asdasd");
   });
 })(jQuery);
