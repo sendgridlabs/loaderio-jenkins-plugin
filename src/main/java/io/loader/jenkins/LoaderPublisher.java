@@ -104,7 +104,9 @@ public class LoaderPublisher extends Notifier {
             }
         }
         
-        LoaderBuildAction action = new LoaderBuildAction(build);
+        LoaderAPI loaderApi = new LoaderAPI(apiKey);
+        String resTestResultId = loaderApi.runTest(getTestId());
+        LoaderBuildAction action = new LoaderBuildAction(build, getTestId(), resTestResultId);
         build.getActions().add(action);
         build.setResult(result);
 		return true;
