@@ -79,21 +79,21 @@ public class LoaderAPI {
         }
     }
 
-    public String getTestStatus(String testId) {
-        logger.println("in #getTestStatus");
+    public TestData getTest(String testId) {
+        logger.println("in #getTest");
         Result result = doGetRequest("tests/" + testId);
         logger.println("Result :::" + result.code + "\n" + result.body);
         if (result.isFail()) {
             return null;
         }
-        return fetchStatusFromTest(result.body);
+        return fetchTestData(result.body);
+
     }
 
-    private String fetchStatusFromTest(String json) {
+    private TestData fetchTestData(String data) {
         try {
-            JSONObject object = (JSONObject) JSONSerializer.toJSON(json);
-            logger.format("Got status: %s", object.getString("status"));
-            return object.getString("status");
+            JSONObject json = (JSONObject) JSONSerializer.toJSON(data);
+            return new TestData(json);
         } catch (RuntimeException ex) {
             logger.format("Got exception: %s", ex);
             return null;
@@ -112,14 +112,16 @@ public class LoaderAPI {
         return body.getString("summary_id");
     }
 
-    public String getTestSummaryData(String testId, String summaryId) {
+    public SummaryData getTestSummaryData(String testId, String summaryId) {
         logger.println("in #getTestSummaryData");
         Result result = doGetRequest("tests/" + testId + "/summaries/" + summaryId);
         logger.println("Result :::" + result.code + "\n" + result.body);
         if (result.isFail()) {
             return null;
         }
-        return "ok";
+        //TODO: check on exception
+        JSONObject json = (JSONObject) JSONSerializer.toJSON(result.body);
+        return new SummaryData(json);
     }
 
     public Boolean getTestApi() {
