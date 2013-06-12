@@ -40,9 +40,27 @@ public class LoaderAPI {
         Map<String, String> tests = new HashMap<String, String>();
         for (Object test : list) {
             JSONObject t = (JSONObject) test;
-            tests.put(t.getString("test_id"), t.getString("name"));
+            String title = prepareTestTitle(t);
+            tests.put(t.getString("test_id"), title);
         }
         return tests;
+    }
+
+    protected String prepareTestTitle(JSONObject test) {
+        String title = test.getString("name");
+        String id = test.getString("test_id");
+        int minConn = test.getInt("from");
+        int maxConn = test.getInt("to");
+        int duration = test.getInt("duration");
+        if (isEmptyString(title)) {
+            return String.format("TestId: %s (connections: %s/%s, duration: %s)", id, minConn, maxConn, duration);
+        } else {
+            return String.format("%s (id: %s, connections: %d/%d, duration: %s)", title, id, minConn, maxConn, duration);
+        }
+    }
+
+    protected boolean isEmptyString(String string) {
+        return string == null || string.trim().isEmpty();
     }
 
     public JSONArray getTests() {
@@ -105,7 +123,7 @@ public class LoaderAPI {
     }
 
     public Boolean getTestApi() {
-        if (apiKey == null || apiKey.trim().isEmpty()) {
+        if (isEmptyString(apiKey)) {
             logger.println("getTestApi apiKey is empty");
             return false;
         }
