@@ -7,7 +7,7 @@
   
   <j:set var="keys" value="${descriptor.getCredentials(app)}"/>
   <j:if test="${keys.size() &gt; 1}">
-    <f:section title="Loader.io Perfomance Testing">
+    <f:section title="loader.io testing - by SendGrid Labs">
       <f:entry title="${%Select default API Key}" field="apiKey">
         <f:select style="width:32em;"/>
         <div>You can add more API keys on <a href="./credentials">this page</a></div>
@@ -15,7 +15,7 @@
     </f:section>
   </j:if>
   <j:if test="${keys.size() == 1}">
-    <f:section title="Loader.io Perfomance Testing">
+    <f:section title="loader.io testing - by SendGrid Labs">
       <f:entry>
         <div>API Key defined. Keys can be <a href="./credentials">managed</a>. If more than one key is present a
           drop down list will be displayed here to allow selecting the default.</div>
@@ -26,7 +26,7 @@
     </f:section>
   </j:if>
   <j:if test="${keys.size() == 0}">
-    <f:section title="Loader.io Perfomance Testing">
+    <f:section title="loader.io testing - by SendGrid Labs">
     <f:entry>
       <div>No API Keys defined. Please <a href="./credentials">add some</a></div>
     </f:entry>

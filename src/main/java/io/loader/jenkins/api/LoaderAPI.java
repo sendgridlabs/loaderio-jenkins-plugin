@@ -69,7 +69,7 @@ public class LoaderAPI {
 
     public JSONArray getTests() {
         logger.println("in #getTests");
-        return getListData("tests?status=complete&fields[]=name&fields[]=domain");
+        return getListData("tests?status=active&fields[]=name&fields[]=domain");
     }
 
     private JSONArray getListData(String path) {

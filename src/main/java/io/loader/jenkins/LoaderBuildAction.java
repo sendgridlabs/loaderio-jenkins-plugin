@@ -33,7 +33,7 @@ public class LoaderBuildAction implements HealthReportingAction {
 	}
 
 	public String getDisplayName() {
-		return "Loader.io Report";
+		return "loader.io Report";
 	}
 
 	public String getUrlName() {

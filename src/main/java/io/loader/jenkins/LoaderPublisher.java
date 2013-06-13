@@ -176,14 +176,14 @@ public class LoaderPublisher extends Notifier {
 	
 	private void logInfo(String str) {
 		if (logger != null) {
-			logger.println("Loader.io: " + str);
+			logger.println("loader.io: " + str);
 		}
 	}
 	
 	private Result validateParameters(PrintStream logger) {
         Result result = Result.SUCCESS;
         if (errorUnstableThreshold >= 0 && errorUnstableThreshold <= 100) {
-        	logInfo("Errors percentage greater or equal than "
+        	logInfo("Errors percentage equal to or greater than "
                     + errorUnstableThreshold + "% will be considered as "
                     + Result.UNSTABLE.toString().toLowerCase());
         } else {

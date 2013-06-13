@@ -11,7 +11,7 @@
     
     <st:include it="${it.owner}" page="sidepanel.jelly" from="${it.owner}" />
     <l:main-panel>
-        <h1><a href="http://loader.io" target="_blank">${%Loader.io Test Report}</a></h1>
+        <h1><a href="http://loader.io" target="_blank">${%loader.io Test Report}</a></h1>
         <br/>
         
         <j:if test="${it.testResultId == null}">

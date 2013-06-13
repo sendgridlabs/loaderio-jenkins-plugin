@@ -18,7 +18,7 @@
 
   <name>loader.io plugin</name>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/loaderio</url>
-  <description>This plugin allows to stress-test your web-apps/apis with thousands of concurrent connections via &lt;a href="http://loader.io"&gt;loader.io&lt;/a&gt; API.</description>
+  <description>Simple cloud-based load testing for your web apps/apis with thousands of connections via the loader.io API - by SendGrid Labs</description>
   <developers>
     <developer>
       <id>criskiev</id>
