@@ -183,38 +183,38 @@ public class LoaderPublisher extends Notifier {
 	private Result validateParameters(PrintStream logger) {
         Result result = Result.SUCCESS;
         if (errorUnstableThreshold >= 0 && errorUnstableThreshold <= 100) {
-        	logInfo("Errors percentage equal to or greater than "
+        	logInfo("Errors percentage greater than or equal to "
                     + errorUnstableThreshold + "% will be considered as "
                     + Result.UNSTABLE.toString().toLowerCase());
         } else {
-        	logInfo("percentage should be between 0 to 100");
+        	logInfo("ERROR! percentage should be between 0 to 100");
             result = Result.NOT_BUILT;
         }
 
         if (errorFailedThreshold >= 0 && errorFailedThreshold <= 100) {
-        	logInfo("Errors percentage greater or equal than "
+        	logInfo("Errors percentage greater than or equal to "
                     + errorFailedThreshold + "% will be considered as "
                     + Result.FAILURE.toString().toLowerCase());
         } else {
-        	logInfo("percentage should be between 0 to 100");
+        	logInfo("ERROR! percentage should be between 0 to 100");
             result = Result.NOT_BUILT;
         }
 
         if (responseTimeUnstableThreshold >= 0) {
-        	logInfo("Response time greater or equal than "
+        	logInfo("Response time greater than or equal to "
                     + responseTimeUnstableThreshold + "millis will be considered as "
                     + Result.UNSTABLE.toString().toLowerCase());
         } else {
-            logger.println("percentage should be greater or equal than 0");
+            logger.println("ERROR! percentage should be greater than or equal to 0");
             result = Result.NOT_BUILT;
         }
 
         if (responseTimeFailedThreshold >= 0) {
-        	logInfo("Response time greater or equal than "
+        	logInfo("Response time greater than or equal to "
                     + responseTimeFailedThreshold + "millis will be considered as "
                     + Result.FAILURE.toString().toLowerCase());
         } else {
-        	logInfo("percentage should be greater or equal than 0");
+        	logInfo("ERROR! percentage should be greater than or equal to 0");
             result = Result.NOT_BUILT;
         }
         return result;
