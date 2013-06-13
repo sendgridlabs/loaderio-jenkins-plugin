@@ -47,15 +47,16 @@ public class LoaderAPI {
     }
 
     protected String prepareTestTitle(JSONObject test) {
-        String title = test.getString("name");
-        String id = test.getString("test_id");
-        int minConn = test.getInt("from");
-        int maxConn = test.getInt("to");
-        int duration = test.getInt("duration");
-        if (isEmptyString(title)) {
-            return String.format("TestId: %s (connections: %s/%s, duration: %s)", id, minConn, maxConn, duration);
-        } else {
-            return String.format("%s (id: %s, connections: %d/%d, duration: %s)", title, id, minConn, maxConn, duration);
+        String id = "";
+        try {
+            id = test.getString("test_id");
+            String title = test.getString("name");
+            String domain = test.getString("domain");
+            String asTitle = isEmptyString(title) ? domain : title;
+            return String.format("%s (%s)", asTitle, id);
+        } catch (RuntimeException ex) {
+            logger.println("Got Exception: " + ex);
+            return id;
         }
     }
 
@@ -63,18 +64,32 @@ public class LoaderAPI {
         return string == null || string.trim().isEmpty();
     }
 
+    public JSONArray getApps() {
+        logger.println("in #getApps");
+        return getListData("apps");
+    }
+
     public JSONArray getTests() {
         logger.println("in #getTests");
-        Result result = doGetRequest("tests");
-        logger.println("Result :::" + result.code + "\n" + result.body);
+        return getListData("tests?status=complete&fields[]=name&fields[]=domain");
+    }
+
+    private JSONArray getListData(String path) {
+        Result result = doGetRequest(path);
+        logger.println("Result (max 1000 symbols):::" + result.code + "\n" +
+            (result.body.length() > 1000 ? result.body.substring(0, 1000) : result.body));
         if (result.isFail()) {
             return null;
         }
-        //TODO: check on exception
-        JSON list = JSONSerializer.toJSON(result.body);
-        if (list.isArray()) {
-            return (JSONArray) list;
-        } else {
+        try {
+            JSON list = JSONSerializer.toJSON(result.body);
+            if (list.isArray()) {
+                return (JSONArray) list;
+            } else {
+                return null;
+            }
+        } catch (RuntimeException ex) {
+            logger.println("Got Exception: " + ex);
             return null;
         }
     }
@@ -129,8 +144,8 @@ public class LoaderAPI {
             logger.println("getTestApi apiKey is empty");
             return false;
         }
-        JSON tests = getTests();
-        if (null == tests) {
+        JSON apps = getApps();
+        if (null == apps) {
             logger.println("invalid ApiKey");
             return false;
         }
