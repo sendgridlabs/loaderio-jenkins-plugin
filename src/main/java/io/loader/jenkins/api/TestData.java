@@ -1,7 +1,6 @@
 package io.loader.jenkins.api;
 
 import net.sf.json.JSONObject;
-import net.sf.json.JSON;
 
 public class TestData {
     public String testId;

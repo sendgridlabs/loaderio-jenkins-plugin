@@ -6,8 +6,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.servlet.ServletException;
-
 import net.sf.json.JSONException;
 import net.sf.json.JSONSerializer;
 import net.sf.json.JSONObject;
@@ -40,8 +38,8 @@ public class LoaderAPI {
         Map<String, String> tests = new HashMap<String, String>();
         for (Object test : list) {
             JSONObject t = (JSONObject) test;
-            String title = prepareTestTitle(t);
-            tests.put(t.getString("test_id"), title);
+            //String title = prepareTestTitle(t);
+            tests.put(t.getString("test_id"), t.getString("name"));
         }
         return tests;
     }

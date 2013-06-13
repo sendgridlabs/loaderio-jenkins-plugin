@@ -3,6 +3,8 @@ package io.loader.jenkins;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 
 import io.loader.jenkins.api.LoaderAPI;
+import io.loader.jenkins.api.SummaryData;
+import io.loader.jenkins.api.TestData;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -52,7 +54,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
  * method will be invoked. 
  *
- * @author Kohsuke Kawaguchi
+ * @author
  */
 public class LoaderPublisher extends Notifier {
 	
@@ -106,9 +108,69 @@ public class LoaderPublisher extends Notifier {
         
         LoaderAPI loaderApi = new LoaderAPI(apiKey);
         String resTestResultId = loaderApi.runTest(getTestId());
-        LoaderBuildAction action = new LoaderBuildAction(build, getTestId(), resTestResultId);
+        if (resTestResultId == null) {
+        	logInfo("Invalid test information");
+        	result = Result.NOT_BUILT;
+            return false;
+        }
+        
+        int lastPrint = 0;
+        int interval = 5;
+        
+        while (true) {
+        	TestData testInfo = loaderApi.getTest(getTestId());
+        	
+        	if (testInfo == null) {
+        		logInfo("API return invalid test information");
+            	result = Result.NOT_BUILT;
+                return false;
+        	}
+        	
+        	if (testInfo.status.equalsIgnoreCase("running") || testInfo.status.equalsIgnoreCase("pending")) {
+        		logInfo("Waiting for test results " + lastPrint + " sec");
+        		if (testInfo.duration > 0 && (testInfo.duration + 60) < lastPrint) {
+        			logInfo("API doesn't return test results");
+                	result = Result.NOT_BUILT;
+                    return false;
+        		} else {
+        			lastPrint = lastPrint + interval; 
+        			Thread.sleep(interval * 1000);
+        		}
+        	} else {
+        		break;
+        	}
+        	
+        	
+        }
+        
+        Thread.sleep(10 * 1000);
+        SummaryData testSummaryInfo = loaderApi.getTestSummaryData(getTestId(), resTestResultId);
+        
+        double thresholdTolerance = 0.00005;
+        
+        if (errorFailedThreshold >= 0 && testSummaryInfo.avgErrorRate - errorFailedThreshold > thresholdTolerance) {
+            result = Result.FAILURE;
+            logInfo("Test ended with " + Result.FAILURE + " on error percentage threshold");
+        } else if (errorUnstableThreshold >= 0
+                && testSummaryInfo.avgErrorRate - errorUnstableThreshold > thresholdTolerance) {
+        	logInfo("Test ended with " + Result.UNSTABLE + " on error percentage threshold");
+            result = Result.UNSTABLE;
+        }
+
+        if (responseTimeFailedThreshold >= 0 && testSummaryInfo.avgResponseTime - responseTimeFailedThreshold > thresholdTolerance) {
+            result = Result.FAILURE;
+            logInfo("Test ended with " + Result.FAILURE + " on response time threshold");
+
+        } else if (responseTimeUnstableThreshold >= 0
+                && testSummaryInfo.avgResponseTime - responseTimeUnstableThreshold > thresholdTolerance) {
+            result = Result.UNSTABLE;
+            logInfo("Test ended with " + Result.UNSTABLE + " on response time threshold");
+        }
+        	
+    	LoaderBuildAction action = new LoaderBuildAction(build, getTestId(), resTestResultId);
         build.getActions().add(action);
         build.setResult(result);
+        
 		return true;
 	}
 	

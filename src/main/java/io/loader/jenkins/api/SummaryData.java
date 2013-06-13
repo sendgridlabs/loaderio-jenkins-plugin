@@ -1,8 +1,6 @@
 package io.loader.jenkins.api;
 
 import net.sf.json.JSONObject;
-import net.sf.json.JSONArray;
-import net.sf.json.JSON;
 
 public class SummaryData {
     public int    avgResponseTime;

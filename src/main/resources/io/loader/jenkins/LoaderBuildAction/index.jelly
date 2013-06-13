@@ -15,7 +15,7 @@
         <br/>
         
         <j:if test="${it.testResultId == null}">
-          <div>Test not found</div>
+          <div>Test not finished or invalid</div>
         </j:if>
         
         <j:if test="${it.testResultId != null}">
