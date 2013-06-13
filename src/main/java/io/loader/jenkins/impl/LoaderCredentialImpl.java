@@ -74,8 +74,7 @@ public class LoaderCredentialImpl extends AbstractLoaderioCredential {
         
         private FormValidation checkLoaderKey(final String apiKey) throws JSONException, IOException, ServletException {
         	LoaderAPI ldr = new LoaderAPI(apiKey);
-            Boolean testValid = ldr.getTestApi();
-            if (!testValid) {
+            if (!ldr.getTestApi()) {
                 return FormValidation.errorWithMarkup("API Key is Invalid");
             } else {
                 return FormValidation.ok("API Key is Valid.");
