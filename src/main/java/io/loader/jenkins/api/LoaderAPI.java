@@ -38,8 +38,8 @@ public class LoaderAPI {
         Map<String, String> tests = new HashMap<String, String>();
         for (Object test : list) {
             JSONObject t = (JSONObject) test;
-            //String title = prepareTestTitle(t);
-            tests.put(t.getString("test_id"), t.getString("name"));
+            String title = prepareTestTitle(t);
+            tests.put(t.getString("test_id"), title);
         }
         return tests;
     }
@@ -137,7 +137,7 @@ public class LoaderAPI {
         return new SummaryData(json);
     }
 
-    public Boolean getTestApi() {
+    public boolean isValidApiKey() {
         if (isEmptyString(apiKey)) {
             logger.println("getTestApi apiKey is empty");
             return false;
