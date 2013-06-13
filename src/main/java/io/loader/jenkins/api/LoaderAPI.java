@@ -122,12 +122,12 @@ public class LoaderAPI {
         }
         //TODO: check on exception
         JSONObject body = (JSONObject) JSONSerializer.toJSON(result.body);
-        return body.getString("summary_id");
+        return body.getString("result_id");
     }
 
     public SummaryData getTestSummaryData(String testId, String summaryId) {
         logger.println("in #getTestSummaryData");
-        Result result = doGetRequest("tests/" + testId + "/summaries/" + summaryId);
+        Result result = doGetRequest("tests/" + testId + "/results/" + summaryId);
         logger.println("Result :::" + result.code + "\n" + result.body);
         if (result.isFail()) {
             return null;
