@@ -94,8 +94,8 @@
 
   <scm>
   	<url>https://github.com/sendgridlabs/loaderio-jenkins-plugin</url>
-  	<connection>scm:git:git@github.com:sendgridlabs/loaderio-jenkins-plugin.git</connection>
-  	<developerConnection>scm:git:git@github.com:sendgridlabs/loaderio-jenkins-plugin.git</developerConnection>
+  	<connection>scm:git:ssh:git@github.com:sendgridlabs/loaderio-jenkins-plugin.git</connection>
+  	<developerConnection>scm:git:ssh:git@github.com:sendgridlabs/loaderio-jenkins-plugin.git</developerConnection>
   </scm>
   
   <ciManagement>
