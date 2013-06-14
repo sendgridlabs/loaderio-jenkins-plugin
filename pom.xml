@@ -84,4 +84,18 @@
   	<connection>scm:git:ssh://github.com/sendgridlabs/loaderio-jenkins-plugin.git</connection>
   	<developerConnection>scm:git:ssh://git@github.com:sendgridlabs/loaderio-jenkins-plugin.git</developerConnection>
   </scm>
+  <ciManagement>
+  	<url>https://buildhive.cloudbees.com/job/sendgridlabs/job/loaderio-jenkins-plugin/</url>
+  </ciManagement>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
