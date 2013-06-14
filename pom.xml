@@ -17,12 +17,16 @@
   </organization>
 
   <name>loader.io plugin</name>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/loaderio</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/loaderio-plugin</url>
   <description>Simple cloud-based load testing for your web apps/apis with thousands of connections via the loader.io API - by SendGrid Labs</description>
   <developers>
     <developer>
       <id>criskiev</id>
       <name>Sergii Boiko</name>
+    </developer>
+    <developer>
+      <id>le0pard</id>
+      <name>Alexey Vasiliev</name>
     </developer>
   </developers>
   
@@ -75,4 +79,9 @@
     -->
     <maven-hpi-plugin.version>1.95</maven-hpi-plugin.version>
   </properties>
+  <scm>
+  	<url>https://github.com/sendgridlabs/loaderio-jenkins-plugin</url>
+  	<connection>scm:git:ssh://github.com/sendgridlabs/loaderio-jenkins-plugin.git</connection>
+  	<developerConnection>scm:git:ssh://git@github.com:sendgridlabs/loaderio-jenkins-plugin.git</developerConnection>
+  </scm>
 </project>
