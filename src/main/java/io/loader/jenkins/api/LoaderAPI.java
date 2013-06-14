@@ -20,7 +20,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.http.HttpResponse;
 
 public class LoaderAPI {
-    static final String baseApiUri = "http://api.loader.io/v2/";
+    static final String baseApiUri = "https://api.loader.io/v2/";
 
     PrintStream logger = new PrintStream(System.out);
     String apiKey;
