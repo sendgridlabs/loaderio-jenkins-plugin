@@ -10,3 +10,5 @@
 .DS_Store
 work/
 release.properties
+.settings
+.classpath
