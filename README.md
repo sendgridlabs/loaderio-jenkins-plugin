@@ -1,6 +1,6 @@
 # LoaderIO Jenkins Plugin
 
-
+## [Wiki](https://wiki.jenkins-ci.org/display/JENKINS/loaderio)
 
 ## Debugging a Plugin
 
