@@ -115,7 +115,7 @@ public class LoaderAPI {
 
     public String runTest(String testId) {
         logger.println("in #getTests");
-        Result result = doPutRequest("tests/" + testId + "/run");
+        Result result = doPutRequest("tests/" + testId + "/run?source=jenkins");
         logger.println("Result :::" + result.code + "\n" + result.body);
         if (result.isFail()) {
             return null;
